@@ -1,5 +1,5 @@
 SYNFLAB ;ven/gpl - fhir loader utilities ;Aug 15, 2019@14:20:15
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 13
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;
  ; Authored by George P. Lilly 2017-2018
  ;
@@ -15,6 +15,7 @@ importLabs(rtn,ien,args) ; entry point for loading labs for a patient
  ;. k @root@(ien,"load","labs")
  ;. m @root@(ien,"load","labs")=grtn("labs")
  ;. if $g(args("debug"))=1 m rtn=grtn
+ if $g(args("debug"))=1 m rtn=grtn
  s rtn("labsStatus","status")=$g(grtn("status","status"))
  s rtn("labsStatus","loaded")=$g(grtn("status","loaded"))
  s rtn("labsStatus","errors")=$g(grtn("status","errors"))
@@ -159,6 +160,7 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . ;
  . n vistalab s vistalab=$$graphmap^SYNGRAPH("loinc-lab-map",obscode)
  . i +vistalab=-1 s vistalab=$$graphmap^SYNGRAPH("loinc-lab-map"," "_obscode)
+ . i +vistalab=-1 s vistalab=$$covid^SYNGRAPH(obscode)
  . i +vistalab'=-1 d
  .. d log(jlog,"Lab found in graph: "_vistalab)
  .. s @eval@("labs",zi,"parms","vistalab")=vistalab
@@ -182,6 +184,15 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . . s dec=+$p($p(xform,"""",2),",",3)
  . i $l($p(DHPOBS,".",2))>1 d
  . . s DHPOBS=$s(dec<4:$j(DHPOBS,1,dec),dec>3:$j(DHPOBS,1,3),1:$j(DHPOBS,1,0)) ; fix results with too many decimal places
+ . ; added for Covid tests
+ . i DHPOBS="" d  ; no quant value
+ . . n vtxt ; value text
+ . . s vtxt=$get(@json@("entry",zi,"resource","valueCodeableConcept","text"))
+ . . i vtxt["Negative" s DHPOBS="Negative" ; 260385009
+ . . i vtxt["Positive" s DHPOBS="Positive" ; 10828004
+ . . i vtxt["Detected" s DHPOBS="Detected" ; 260373001
+ . . i vtxt["Not detected" s DHPOBS="Not detected" ; 260415000
+ . . i vtxt["Confirmed" s DHPOBS="Confirmed" ; 
  . s @eval@("labs",zi,"parms","DHPOBS")=DHPOBS
  . d log(jlog,"Value is: "_DHPOBS)
  . ;

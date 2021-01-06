@@ -1,5 +1,5 @@
 SYNFGRAPH       ;ven/gpl - fhir loader utilities ;2018-08-17  3:26 PM
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 13
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;
  ; Authored by George P. Lilly 2017-2018
  ;
@@ -137,4 +137,26 @@ loincMap() ; create the lonic-lab-map
  s @root@("index","root")=rindx
  d index(rindx)
  q
+ ;
+covid(loinc) ; extrinsic returns the name of the lab test  in ^LAB(60, 
+ ; for the loinc code
+ n rt,rien,LAB
+ s LAB(5091)="COVID-19 (PHRL)"
+ s LAB(5092)="COVID-19 CONFIRMATORY"
+ s LAB("94531-1",5093)="COVID-19 PANEL"
+ s LAB("92130-4",5096)="RHINOVIRUS RNA RESP"
+ s LAB("92131-2",5097)="RESPSYNVIRUS RNA"
+ s LAB("92134-6",5098)="METAPNEUMOVIRUS RNA"
+ s LAB("92138-7",5099)="PARAINFLUENZA VIRUS 3 RNA"
+ s LAB("92139-5",5100)="PARAINFLUENZA VIRUS 2 RNA"
+ s LAB("92140-3",5101)="PARAINFLUENZA VIRUS 1 RNA"
+ s LAB("92141-1",5103)="INFLUENZA B RNA"
+ s LAB("80383-3",5103)="INFLUENZA B RNA"
+ s LAB("92142-9",5104)="INFLUENZA A RNA"
+ s LAB("80382-5",5104)="INFLUENZA A RNA"
+ s LAB("94040-3",5105)="ADENOVIRUS A+B+C+D+E DNA"
+ s rien=$o(LAB(loinc,""))
+ s rt=$g(LAB(loinc,rien))
+ i rt="" s rt=-1
+ q rt
  ;
