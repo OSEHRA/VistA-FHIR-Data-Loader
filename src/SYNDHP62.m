@@ -1,5 +1,5 @@
 SYNDHP62 ;DHP/ART -  Write Problems, Appointments To VistA ;05/29/2018
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 3
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;;Original routine authored by Andrew Thompson & Ferdinand Frankson of DXC Technology 2017-2018
  ;
  QUIT

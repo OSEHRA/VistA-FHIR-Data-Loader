@@ -140,8 +140,6 @@ wsIntakeVitals(args,body,result,ien) ; web service entry (post)
  . ; fix blood preasure readings (combine two readings to one)
  . ;
  . if obscode="55284-4" do  ; Blood Pressure
- . ; as of fhir r4 and Synthea Covid, there are 2 loinc codes for BP - gpl
- . if $$loinc2sct(obscode)=75367002 d  ; it's a blood pressure
  . . new tmpjson,systolic,diastolic,combined
  . . merge tmpjson=@json@("entry",zi)
  . . d log(jlog,"Combining Blood Pressure values")
@@ -275,7 +273,6 @@ loinc2sct(loinc) ; extrinsic returns a Snomed code for a Loinc code
  S SCTA("29463-7",27113001)="9^Body weight"
  S SCTA("8302-2",50373000)="8^Body height"
  S SCTA("55284-4",75367002)="1^Blood pressure"
- S SCTA("85354-9",75367002)="1^Blood pressure"
  S SCTA(78564009)="5^Pulse rate"
  S SCTA("8331-1",386725007)="2^Body Temperature"
  S SCTA(86290005)="3^Respiration"

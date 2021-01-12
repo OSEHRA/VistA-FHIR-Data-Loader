@@ -1,5 +1,5 @@
 SYNGRAF        ;ven/gpl - mash graph utilities ; 9/24/17 4:33pm
- ;;1.0;norelease;;feb 27, 2017;build 2
+ ;;1.0;norelease;;feb 27, 2017;Build 10
  ;
  ;
  q

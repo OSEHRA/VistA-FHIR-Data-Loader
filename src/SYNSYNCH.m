@@ -1,5 +1,5 @@
 SYNSYNCH ;ven/gpl - fhir loader utilities ;2018-08-17  3:27 PM
- ;;0.1;VISTA SYNTHETIC DATA LOADER;;Aug 17, 2018;Build 45
+ ;;0.3;VISTA SYNTHETIC DATA LOADER;;Jul 01, 2019;Build 46
  ;
  ; Authored by George P. Lilly 2017-2018
  ;
@@ -37,13 +37,13 @@ SYNCH(VSYS) ; synchronize with another VistA system
  N RTN
  D WSIDSYNC(.RTN,.FILTER)
  ;
- n root s root=$$setroot^SYNWD("vista-synch")
+ n root s root=$$setroot^%wd("vista-synch")
  n sroot s sroot=$na(@root@(1,"list","synch"))
  i '$d(@sroot) d  q  ;
  . s RTN=$G(RTN)_"^"_" Synchronize step failed"
  . w RTN(1)
  n return
- d decode^SYNJSONE("RTN","return")
+ d decode^%webjson("RTN","return")
  w !,"System: "_$g(return("result","source"))
  w !,"URL: "_$g(return("result","url"))
  w !,"Matches: "_$g(return("result","match","matchcount"))
@@ -52,7 +52,7 @@ SYNCH(VSYS) ; synchronize with another VistA system
  ;
 INGEST ; complete the synchronization
  ;
- n root s root=$$setroot^SYNWD("vista-synch")
+ n root s root=$$setroot^%wd("vista-synch")
  n sroot s sroot=$na(@root@(1,"list","synch"))
  i '$d(@sroot) d  q  ;
  . W !,"No patients to synchronize"
@@ -137,7 +137,7 @@ WSIDSYNC(RTN,FILTER) ; identify patients to synch
  ;
  d match("vista-synch",.rslt)
  ;
- d encode^SYNJSONE("rslt","RTN")
+ d encode^%webjson("rslt","RTN")
  q
  ;
 getlist(RTN,FILTER,rslt) ; extrinsic puts list in a graph returns 0 on fail
@@ -152,10 +152,10 @@ getlist(RTN,FILTER,rslt) ; extrinsic puts list in a graph returns 0 on fail
  s rslt("result","url")=url
  i url="not found" d  q 0
  . s rslt("result","status")="url not provided, aborting"
- . d encode^SYNJSONE("rslt","RTN")
+ . d encode^%webjson("rslt","RTN")
  s url=url_"/DHPPATICNALL?JSON=J"
  n gname s gname="vista-synch"
- n root s root=$$setroot^SYNWD(gname)
+ n root s root=$$setroot^%wd(gname)
  ;
  d  ;
  . n gtmp s gtmp=$g(@root@(0))
@@ -178,14 +178,14 @@ getlist(RTN,FILTER,rslt) ; extrinsic puts list in a graph returns 0 on fail
  s @root@("B",name,lien)=""
  ;
  set gr=$name(@root@(lien,"list"))
- do decode^SYNJSONE("json",gr)
+ do decode^%webjson("json",gr)
  s @gr@("name")=name
  s @gr@("url")=$p(url,"/DHPPATICNALL",1)
  ;
  q 1
  ;
 clean(zgr) ; clean graph zgr - remove "/s" nodes
- n root s root=$$setroot^SYNWD(zgr)
+ n root s root=$$setroot^%wd(zgr)
  q:root=""
  n groot s groot=$na(@root@(1,"list"))
  n zi s zi=""
@@ -195,9 +195,9 @@ clean(zgr) ; clean graph zgr - remove "/s" nodes
  ; 
 match(graph,rslt) ; matches ICNs to local system
  ;
- n root s root=$$setroot^SYNWD(graph)
+ n root s root=$$setroot^%wd(graph)
  n groot s groot=$na(@root@(1,"list"))
- n intake s intake=$$setroot^SYNWD("fhir-intake")
+ n intake s intake=$$setroot^%wd("fhir-intake")
  n icndex s icndex=$na(@intake@("POS","ICN"))
  ;
  n matcnt,syncnt,cnt

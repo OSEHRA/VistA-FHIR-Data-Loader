@@ -1,5 +1,5 @@
 SYNQLDM ; GPL/GPL - QRDA loader entry routines ;2018-08-17  3:25 PM
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 13
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;
  ; Authored by George P. Lilly 2016-2018
  ;

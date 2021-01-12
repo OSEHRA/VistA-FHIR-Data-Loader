@@ -1,5 +1,5 @@
 SYNVPR  ; GPL/GPL - VPR viewing routines ;2019-08-07  3:57 PM
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 34
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;
  ; Authored by George P. Lilly 2013-2018
  ;
@@ -259,7 +259,7 @@ wsVPR(VPR,FILTER)       ; get from web service call
  S @VPR="<!DOCTYPE HTML><html><head></head><body><pre>"
  D show(1,DOCID,VPR)
  S @VPR@($O(@VPR@(""),-1)+1)="</pre></body></html>"
- D ADDCRLF^SYNWEBUT(.VPR)
+ D ADDCRLF^%webutils(.VPR)
  ;D BROWSE^DDBR(GN,"N","PATIENT "_ZDFN_" "_ZTYPE)
  ;K @GN,^TMP("MXMLDOM",$J),^TMP("VPR",$J),GN
  q
@@ -446,7 +446,7 @@ wsGLOBAL(OUT,FILTER)    ; dump a global to the browser as text
  . S @OUT@($O(@OUT@(""),-1)+1)=ROOT_"="_V
  S @OUT@(.1)="OSEHRA ZGO Export: M Web Server ZWRITE Export"
  S @OUT@(.2)=$TR($TR($$FMTE^XLFDT($$NOW^XLFDT,"9")," ","-"),"@"," ")_" ZWR"
- D ADDCRLF^SYNWEBUT(.OUT)
+ D ADDCRLF^%webutils(.OUT)
  Q
  ;
 GTREE(ROOT,DEPTH,PREFIX,LVL,RSLT)    ; show a global in a tree
@@ -498,6 +498,6 @@ wsGtree(OUT,FILTER) ; show an outline form of a global
  . . I ZF="BAK2^VWXPAT" D BAK2^VWXPAT(.OUT) Q  ;
  S @OUT="<!DOCTYPE HTML><html><head></head><body><pre>"
  S @OUT@($O(@OUT@(""),-1)+1)="</pre></body></html>"
- D ADDCRLF^SYNWEBUT(.OUT)
+ D ADDCRLF^%webutils(.OUT)
  Q
  ;

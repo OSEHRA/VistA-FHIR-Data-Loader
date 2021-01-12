@@ -1,5 +1,5 @@
 SYNFMED ;OSE/SMH - Add Medications to Patient Record;Dec 24, 2018@21:29
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 1
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ; (C) 2018 Sam Habiel
  ; See accompanying license for terms of use.
  ;

@@ -178,6 +178,12 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . ;
  . s DHPOBS=value
  . s recien=$o(^LAB(60,"B",DHPLAB,""))
+ . i recien="" d  ; oops lab test not found!!
+ . . S DHPLAB=$$UP^XLFSTR(DHPLAB)
+ . . s vistalab=DHPLAB
+ . . s recien=$o(^LAB(60,"B",DHPLAB,""))
+ . . d log(jlog,"VistA Lab is: "_vistalab)
+ . ;
  . n xform s xform=$$GET1^DIQ(60,recien_",",410)
  . n dec s dec=0
  . i xform["S Q9=" d
@@ -188,11 +194,13 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . i DHPOBS="" d  ; no quant value
  . . n vtxt ; value text
  . . s vtxt=$get(@json@("entry",zi,"resource","valueCodeableConcept","text"))
- . . i vtxt["Negative" s DHPOBS="Negative" ; 260385009
- . . i vtxt["Positive" s DHPOBS="Positive" ; 10828004
- . . i vtxt["Detected" s DHPOBS="Detected" ; 260373001
- . . i vtxt["Not detected" s DHPOBS="Not detected" ; 260415000
- . . i vtxt["Confirmed" s DHPOBS="Confirmed" ; 
+ . . ;i vtxt["Negative" s DHPOBS="Negative" ; 260385009
+ . . i vtxt["Negative" s DHPOBS="Not Detected" ; 260385009
+ . . ;i vtxt["Positive" s DHPOBS="Positive" ; 10828004
+ . . i vtxt["Positive" s DHPOBS="DETECTED" ; 10828004
+ . . i vtxt["Detected" s DHPOBS="DETECTED" ; 260373001
+ . . i vtxt["Not detected" s DHPOBS="Not Detected" ; 260415000
+ . . i vtxt["Confirmed" s DHPOBS="CONFIRMED" ; 
  . s @eval@("labs",zi,"parms","DHPOBS")=DHPOBS
  . d log(jlog,"Value is: "_DHPOBS)
  . ;
@@ -224,6 +232,11 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . d log(jlog,"Location for outpatient is: #"_DHPLOCIEN_" "_DHPLOC)
  . ;
  . s @eval@("labs",zi,"status","loadstatus")="readyToLoad"
+ . ;
+ . i vistalab="PDW" q  ; skipping because it hangs - gpl wvehr 1/7/21
+ . ;i vistalab="INFLUENZA A RNA" Q  ; likewise
+ . ;i vistalab="INFLUENZA B RNA" Q  ; likewise
+ . ;i vistalab="METAPNEUMOVIRUS RNA" Q  ; likewise
  . ;
  . if $g(args("load"))=1 d  ; only load if told to
  . . ;new (DHPPAT,DHPSCT,DHPOBS,DHPUNT,DHPDTM,DHPPROV,DHPLOC,DHPLOINC,DHPLAB)

@@ -1,5 +1,5 @@
 SYNFPAT ;ven/gpl - fhir loader utilities ;2018-05-08  4:18 PM
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 13
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;
  ; Authored by George P. Lilly 2017-2018
  ;
@@ -147,6 +147,8 @@ importPatient(rtn,ien) ; register and import a fhir patient (demographics only)
  set @PLD("index")@(ien,"ICN",icn)=""
  d setIndex^SYNFUTL(ien,"DFN",zdfn)
  d setIndex^SYNFUTL(ien,"ICN",icn)
+ ;
+ I $G(^AUPNPAT(DFN,0))="" D FIXIHS()
  ;
  s rtn("dfn")=zdfn
  s rtn("loadStatus")="loaded"
@@ -439,4 +441,36 @@ genAllIcns ; regenerates all ICNs; insterts in PATIENT file and regenerates inde
  d fixicn1 ; fix ^DPT indexes
  d fixindex1 ; fix graph indexes
  q
+ ;
+FIXIHS() ; create patient records where missing in file 9000001
+ S DFN=0
+ F  S DFN=$O(^DPT(DFN)) Q:+DFN=0  D  ;
+ . I $G(^AUPNPAT(DFN,0))'="" Q  ; already created
+ . S ^AUPNPAT(DFN,0)=DFN
+ . N FDA
+ . I $G(DT)="" S DT=$$NOW^XLFDT
+ . S FDA(9000001,DFN_",",.01)=DFN
+ . S FDA(9000001,DFN_",",.02)=$$NOW^XLFDT
+ . S FDA(9000001,DFN_",",.12)=DUZ ;logged in user IEN (e.g. "13")
+ . S FDA(9000001,DFN_",",.16)=$$NOW^XLFDT
+ . D UPDATE^DIE("",$NAME(FDA))
+ . I $D(^TMP("DIERR",$J)) D  Q  ;
+ . . ;M DIERR=^TMP("DIERR",$J)
+ . . S %ZT("^TMP(""DIERR"",$J)")=""
+ . . S $EC=",U1,"
+ . ;
+ . ; Add medical record number.
+ . NEW IENS S IENS="?+"_DUZ(2)_","_DFN_","
+ . NEW FDA
+ . N PARAM
+ . S PARAM("MRN")=$$GET1^DIQ(2,DFN_",",991.01) ; ICN
+ . I $G(PARAM("MRN"))="" S PARAM("MRN")=$R(928749018234)
+ . SET FDA(9000001.41,IENS,.01)=+$$SITE^VASITE() ; This time, the IEN of the primary site
+ . SET FDA(9000001.41,IENS,.02)=PARAM("MRN") ; Put Medical Record Number on Station Number
+ . DO UPDATE^DIE("",$NAME(FDA))
+ . I $D(^TMP("DIERR",$J)) D  Q
+ . . S %ZT("^TMP(""DIERR"",$J)")=""
+ . . ;M DIERR=^TMP("DIERR",$J)
+ . . S $EC=",U2,"
+ QUIT
  ;

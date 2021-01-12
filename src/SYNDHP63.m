@@ -1,5 +1,5 @@
 SYNDHP63 ;DHP/ART -  Write Lab Tests to VistA ;2019-01-31  10:43 AM
- ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 3
+ ;;0.2;VISTA SYN DATA LOADER;;Feb 07, 2019;Build 10
  ;;Original routine authored by Andrew Thompson & Ferdinand Frankson of DXC Technology 2017-2018
  ;
  QUIT
@@ -56,7 +56,8 @@ LABADD(RETSTA,DHPPAT,DHPLOC,DHPTEST,DHPRSLT,DHPRSDT,DHPLOINC) ;Create lab test
  . S TESTIEN=$O(^LAB(60,"AF",LOINCIEN,""))
  . QUIT:TESTIEN=""
  . S LABTEST=$$GET1^DIQ(60,TESTIEN_",",.01)
- I $G(LABTEST)="" S LABTEST=$$UP^XLFSTR(DHPTEST)
+ ;I $G(LABTEST)="" S LABTEST=$$UP^XLFSTR(DHPTEST)
+ I $G(LABTEST)="" S LABTEST=DHPTEST
  I $G(LABTEST)="" S RETSTA="-1^Cannot determine lab test name." QUIT
  ;
  S LABARRAY("PAT_SSN")=PATSSN
