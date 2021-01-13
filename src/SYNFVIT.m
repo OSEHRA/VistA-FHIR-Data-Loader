@@ -139,7 +139,10 @@ wsIntakeVitals(args,body,result,ien) ; web service entry (post)
  . ;
  . ; fix blood preasure readings (combine two readings to one)
  . ;
- . if obscode="55284-4" do  ; Blood Pressure
+ . n isbp s isbp=0
+ . i obscode="55284-4" s isbp=1
+ . i obscode="85354-9" s isbp=1
+ . if isbp=1 do  ; Blood Pressure
  . . new tmpjson,systolic,diastolic,combined
  . . merge tmpjson=@json@("entry",zi)
  . . d log(jlog,"Combining Blood Pressure values")
@@ -273,13 +276,14 @@ loinc2sct(loinc) ; extrinsic returns a Snomed code for a Loinc code
  S SCTA("29463-7",27113001)="9^Body weight"
  S SCTA("8302-2",50373000)="8^Body height"
  S SCTA("55284-4",75367002)="1^Blood pressure"
- S SCTA(78564009)="5^Pulse rate"
+ S SCTA("85354-9",75367002)="1^Blood pressure" 
+ S SCTA("8867-4",78564009)="5^Pulse rate"
  S SCTA("8331-1",386725007)="2^Body Temperature"
- S SCTA(86290005)="3^Respiration"
+ S SCTA("9279-1",86290005)="3^Respiration"
  S SCTA(48094003)="10^Abdominal girth measurement"
  S SCTA(21727005)="11^Audiometry"
  S SCTA(252465000)="21^Pulse oximetry"
- S SCTA(22253000)="22^Pain"
+ S SCTA("72514-3",22253000)="22^Pain"
  ;
  q $o(SCTA(loinc,""))
  ;
