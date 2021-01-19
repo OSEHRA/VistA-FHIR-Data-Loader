@@ -188,7 +188,8 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . n dec s dec=0
  . i xform["S Q9=" d
  . . s dec=+$p($p(xform,"""",2),",",3)
- . i $l($p(DHPOBS,".",2))>1 d
+ . ;i $l($p(DHPOBS,".",2))>1 d
+ . i $l($p(DHPOBS,".",2))>0 d
  . . s DHPOBS=$s(dec<4:$j(DHPOBS,1,dec),dec>3:$j(DHPOBS,1,3),1:$j(DHPOBS,1,0)) ; fix results with too many decimal places
  . ; added for Covid tests
  . i DHPOBS="" d  ; no quant value
