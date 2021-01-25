@@ -235,6 +235,7 @@ wsIntakeLabs(args,body,result,ien) ; web service entry (post)
  . s @eval@("labs",zi,"status","loadstatus")="readyToLoad"
  . ;
  . i vistalab="PDW" q  ; skipping because it hangs - gpl wvehr 1/7/21
+ . i vistalab="SGPT" q  ; skipping it hangs loinc 1742-6 - gpl wvehr 1/7/21
  . ;i vistalab="INFLUENZA A RNA" Q  ; likewise
  . ;i vistalab="INFLUENZA B RNA" Q  ; likewise
  . ;i vistalab="METAPNEUMOVIRUS RNA" Q  ; likewise
